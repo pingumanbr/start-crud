@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {Container, Row, Col} from 'reactstrap'
 import './App.css';
+import "bootstrap/dist/css/bootstrap.css"
 import {CSVLink} from "react-csv";
 
 class App extends Component {
@@ -92,6 +93,9 @@ fEdit = (i) => {
           <input type="text" ref="address" placeholder= "Endereco" className="formField"/>
           <button onClick={(e) => this.fSubmit(e)} className="myButton"> submit </button>
       </form>
+
+      <br></br>
+      
       <Row>
         <Col>
         { datas.map((data,i) =>
@@ -105,6 +109,7 @@ fEdit = (i) => {
         </Col>
       </Row>
         
+      <br></br>
 
       <Row>
           <Col>
@@ -113,7 +118,7 @@ fEdit = (i) => {
               color="primary"
               style={{float: "left", marginRight: "10px"}}
               className="btn btn-primary"
-              let data = {this.state.datas}>
+              data = {this.state.datas}>
               Download CSV
             </CSVLink>
           </Col>
