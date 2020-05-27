@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React,{Component} from "react";
 import './App.css';
 
 class App extends Component {
@@ -6,10 +6,11 @@ class App extends Component {
   //Inicializacao
   constructor(props){
     super(props);
+   
     this.state={
       title: 'Aplicacao CRUD Simples para Prova de Conceito',
       act: 0,
-      index: '',
+      index: 0,
       datas: []
     }
   }
@@ -17,6 +18,7 @@ class App extends Component {
 
   componentDidMount(){
     this.refs.name.focus();
+    //getContacts();
   }
 
   // Adiciona elemento no array
@@ -27,16 +29,30 @@ class App extends Component {
     let datas = this.state.datas;
     let name = this.refs.name.value;
     let address = this.refs.address.value;
+    let index = this.state.index; 
 
       if( this.state.act === 0 ){ //Novo registro
+
+        this.setState({
+          act:0,
+          index: index
+        })
+
+
           let data = {
             name,address
           }
           datas.push(data);
+
+	  //Salva no DB
+	  this.createContacts( name, address );
+	  
       }else{                      //Atualiza registro
-          let index = this.state.index;
+
+          let index = this.state.index;         
           datas[index].name = name;
           datas[index].address = address;
+
       }
 
 
@@ -47,6 +63,7 @@ class App extends Component {
 
     this.refs.myForm.reset();
     this.refs.name.focus();
+
   }
 
 //Remove elemento
@@ -61,6 +78,10 @@ fRemove = (i) => {
   this.refs.myForm.reset();
   this.refs.name.focus();
 
+  let index = i + 1;
+
+ // elimina do DB
+ this.deleteContacts( index );
 }
 
 //Edita registro
@@ -71,10 +92,10 @@ fEdit = (i) => {
   this.refs.name.value = data.name;
   this.refs.address.value = data.address;
 
-  this.setState({
-    act:1,
-    index: i
-  })
+  let index = i + 1;
+
+  // Salva no DB
+  this.updateContacts( index , data.name, data.address );
 }
 
   render(){
@@ -103,6 +124,56 @@ fEdit = (i) => {
     </div>
   );
   }
+
+  ///////////////////////////////////////////////////////
+  // Database access
+
+createContacts = async ( name, address ) => {
+
+  let url = `http://localhost:5000/contacts/${name}-${address}`;
+  
+      return await fetch(url, {method: "POST"})
+                    .then ( res => res.json() )
+                     .catch( err => console.log(err));
+     
+  };
+  
+  
+  deleteContacts = async ( id ) => {
+   
+    try{
+      await fetch(`http://localhost:5000/contacts/${id}`, {method: "DELETE"}).then(function(response){
+        return response.json();
+      });        
+      
+    }catch(err){
+        console.error(err.message);
+    }
+  };
+  
+  updateContacts = async ( id, name, address ) => {
+   
+      try{
+        await fetch(`http://localhost:5000/contacts/${id}/${name}-${address}`, {method: "PUT"}).then(function(response){
+        return response.json();
+      });        
+        
+      }catch(err){
+          console.error(err.message);
+      }
+  };
+  
+   getContacts =  async () => {
+    try{
+      const response = await fetch("http://localhost:5000/contacts", {method: "GET"});
+      const jsonData = await  response.json();
+      console.log(JSON.stringify( jsonData ));
+      return jsonData;
+    }catch(err){
+        console.error(err.message);
+    } 
+  }
+  
 }
 
 export default App;
