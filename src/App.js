@@ -33,12 +33,6 @@ class App extends Component {
 
       if( this.state.act === 0 ){ //Novo registro
 
-        this.setState({
-          act:0,
-          index: index
-        })
-
-
           let data = {
             name,address
           }
@@ -46,20 +40,31 @@ class App extends Component {
 
 	  //Salva no DB
 	  this.createContacts( name, address );
+	      
+	  this.setState({
+          act:0,
+          index: index
+        })    
 	  
       }else{                      //Atualiza registro
 
-          let index = this.state.index;         
-          datas[index].name = name;
-          datas[index].address = address;
-
+          let index = this.state.index; 
+	      if( index === 0 ){      
+          	datas[index].name = name;
+          	datas[index].address = address;
+	      }else{
+		datas[index-1].name = name;
+          	datas[index-1].address = address;
+	      }
+	      
+	      if( index === 0 ){      
+          	// Salva no DB
+  		this.updateContacts( 1 , data.name, data.address );
+	      }else{
+		// Salva no DB
+  		this.updateContacts( index , data.name, data.address );
+	      }	      
       }
-
-
-     this.setState({
-      datas: datas,
-      act: 0
-    });
 
     this.refs.myForm.reset();
     this.refs.name.focus();
@@ -93,9 +98,11 @@ fEdit = (i) => {
   this.refs.address.value = data.address;
 
   let index = i + 1;
+    this.setState({
+      act: 1,
+      index: index
+    });
 
-  // Salva no DB
-  this.updateContacts( index , data.name, data.address );
 }
 
   render(){
