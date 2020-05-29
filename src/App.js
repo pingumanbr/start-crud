@@ -39,46 +39,37 @@ class App extends Component {
           }
           datas.push(data);
 
-<<<<<<< HEAD
-	        //Salva no DB
-          this.createContacts( name, address );
-      
-=======
-	  //Salva no DB
+          //Salva no DB
 	  this.createContacts( name, address );
 	      
 	  this.setState({
           act:0,
           index: index
         })    
->>>>>>> 6c4291e215d612b9d1fedd306dc1fcea3182b297
 	  
       }else{                      //Atualiza registro
 
           let index = this.state.index; 
-<<<<<<< HEAD
-=======
 	      if( index === 0 ){      
           	datas[index].name = name;
           	datas[index].address = address;
 	      }else{
-		datas[index-1].name = name;
+		        datas[index-1].name = name;
           	datas[index-1].address = address;
 	      }
 	      
 	      if( index === 0 ){      
           	// Salva no DB
-  		this.updateContacts( 1 , data.name, data.address );
+  		      this.updateContacts( 1 , name, address );
 	      }else{
-		// Salva no DB
-  		this.updateContacts( index , data.name, data.address );
+		       // Salva no DB
+  		      this.updateContacts( index , name, address );
 	      }	
 	      
 	this.setState({
       	   datas: datas,
            act: 0
         });
->>>>>>> 6c4291e215d612b9d1fedd306dc1fcea3182b297
 
           if( index === 0){
             datas[index].name = name;
@@ -136,20 +127,11 @@ fEdit = (i) => {
   this.refs.address.value = data.address;
 
   let index = i + 1;
-<<<<<<< HEAD
-  this.setState({
-    act:1,
-    index: index
-  })
-
-  
-=======
     this.setState({
       act: 1,
       index: index
     });
 
->>>>>>> 6c4291e215d612b9d1fedd306dc1fcea3182b297
 }
 
   render(){
