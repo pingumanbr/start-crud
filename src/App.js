@@ -63,7 +63,13 @@ class App extends Component {
 	      }else{
 		// Salva no DB
   		this.updateContacts( index , data.name, data.address );
-	      }	      
+	      }	
+	      
+	this.setState({
+      	   datas: datas,
+           act: 0
+        });
+
       }
 
     this.refs.myForm.reset();
