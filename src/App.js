@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import './App.css';
+import {CSVLink} from "react-csv"
 
 class App extends Component {
 
@@ -11,6 +12,7 @@ class App extends Component {
       title: 'Aplicacao CRUD Simples para Prova de Conceito',
       act: 0,
       index: 0,
+
       datas: []
     }
   }
@@ -24,8 +26,7 @@ class App extends Component {
   // Adiciona elemento no array
   fSubmit = (e) => {
     e.preventDefault();
-    console.log('try');
-
+ 
     let datas = this.state.datas;
     let name = this.refs.name.value;
     let address = this.refs.address.value;
@@ -33,33 +34,42 @@ class App extends Component {
 
       if( this.state.act === 0 ){ //Novo registro
 
-        this.setState({
-          act:0,
-          index: index
-        })
-
-
           let data = {
             name,address
           }
           datas.push(data);
 
-	  //Salva no DB
-	  this.createContacts( name, address );
+	        //Salva no DB
+          this.createContacts( name, address );
+      
 	  
       }else{                      //Atualiza registro
 
-          let index = this.state.index;         
-          datas[index].name = name;
-          datas[index].address = address;
+          let index = this.state.index; 
 
+          if( index === 0){
+            datas[index].name = name;
+            datas[index].address = address;
+          }else{
+            datas[index-1].name = name;
+            datas[index-1].address = address;  
+          }
+ 
+          // Salva no DB
+          if( index === 0 ){
+             this.updateContacts( 1, name, address );
+          }else{
+            this.updateContacts( index, name, address );           
+          }
+  
       }
 
-
-     this.setState({
-      datas: datas,
-      act: 0
-    });
+      this.setState({
+        datas: datas,
+        act: 0,
+        index: index
+      })        
+  
 
     this.refs.myForm.reset();
     this.refs.name.focus();
@@ -93,9 +103,12 @@ fEdit = (i) => {
   this.refs.address.value = data.address;
 
   let index = i + 1;
+  this.setState({
+    act:1,
+    index: index
+  })
 
-  // Salva no DB
-  this.updateContacts( index , data.name, data.address );
+  
 }
 
   render(){
@@ -110,6 +123,15 @@ fEdit = (i) => {
           <input type="text" ref="name" placeholder= "Nome" className="formField"/>
           <input type="text" ref="address" placeholder= "Endereco" className="formField"/>
           <button onClick={(e) => this.fSubmit(e)} className="myButton"> submit </button>
+
+          <CSVLink
+              filename={"ibge.csv"}
+              color="primary"
+              style={{float: "left", marginRight:"10px"}}
+              className="btn btn.primary"
+              data = { this.state.datas}>
+              Download CSV
+          </CSVLink>
       </form>
       <pre>
         { datas.map((data,i) =>
