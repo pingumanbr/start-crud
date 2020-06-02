@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import './App.css';
-import {CSVLink} from "react-csv"
+import {CSVLink} from "react-csv";
 
 class App extends Component {
 
@@ -71,21 +71,7 @@ class App extends Component {
            act: 0
         });
 
-          if( index === 0){
-            datas[index].name = name;
-            datas[index].address = address;
-          }else{
-            datas[index-1].name = name;
-            datas[index-1].address = address;  
-          }
- 
-          // Salva no DB
-          if( index === 0 ){
-             this.updateContacts( 1, name, address );
-          }else{
-            this.updateContacts( index, name, address );           
-          }
-  
+   
       }
 
       this.setState({
